@@ -1,0 +1,42 @@
+package Tdmglob;
+use strict;
+
+require Exporter;
+use vars qw(@ISA @EXPORT $VERSION);
+@ISA = qw(Exporter);
+@EXPORT = qw(tdmglob);
+$VERSION = 1.00;
+
+my $Savetempl = '';
+my @Files = ();
+
+sub tdmglob {
+#  print @ARGV; print "\n";
+  my($newtempl);
+  $newtempl = join('', @_);
+#  print $newtempl;  print "\n";
+  if ($newtempl ne $Savetempl) {
+    $Savetempl = $newtempl; @Files = (); #re-initialize globals
+#    print $Savetempl; print "\n";
+    my (@templs, $templ, $a, $an);
+    @templs = @_;
+    $a = "[a-zA-Z]"; $an = "[a-zA-Z0-9]";
+    foreach $templ (@templs) {
+#      print "template =  $templ \n";
+      if ($templ =~
+             /^(\\$a$an{0,6}\.)?(\$$a$an{0,6}\.)?($a$an{0,7}\.)?$a$an{0,7}$/ ) {
+        open(FILE,$templ) || die "Sorry file:'$templ' cannot be opened: $!";
+        @Files = (@Files, $templ);
+#        print "simple file:\n ";
+        close(FILE);
+      }
+      else{
+        opendir (DIR, $templ);
+        @Files = (@Files, readdir(DIR) );
+#        print "file template:\n";
+      }
+    }
+  }
+  wantarray ? return @_ = @Files : return $_ = shift @Files;
+}
+1;

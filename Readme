@@ -1,0 +1,23 @@
+Tdmglob provides the functionality of the perl builtin glob function. The builtin glob 
+does not work on the Tandem port of Perl for NSK(Guardian). This provided the motivation
+for writing the above module.
+
+Tdmglob is used like any other perl module. In order to expand the filenames corresponding
+to a template containing wild characters, make a call to the functoin tdmglob, provided in 
+the Tdmglob module.
+
+For example:
+
+@file = tdmglob("$xyz.*.d*y");
+
+or 
+
+while ($_=tdmglob("$xyz.*.d*y") {
+  #do your processing.
+}
+
+
+As shown in the example, you can call tdmglob in either list context, or in scalar context
+and it behaves very much like builtin glob function in either case.
+
+
